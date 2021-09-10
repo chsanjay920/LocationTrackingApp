@@ -42,6 +42,8 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         password = (EditText) findViewById(R.id.Password);
         login = (TextView) findViewById(R.id.login_text);
 
+        login.setOnClickListener(this);
+
         progressBar = (ProgressBar) findViewById(R.id.simpleProgressBar2);
     }
 
@@ -111,6 +113,7 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                                     if (task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(),"User has been successfully registered",Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
+
 
                                         //to user profile
                                     }

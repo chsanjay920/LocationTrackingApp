@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -22,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.regex.Pattern;
 
 public class MainActivity2 extends AppCompatActivity implements View.OnClickListener {
-    private EditText name,email,phoneNumber,password;
+    private EditText name,email,password;
     private TextView login;
     private Button register;
     private ProgressBar progressBar;
@@ -38,7 +39,6 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
 
         name = (EditText) findViewById(R.id.fullname);
         email = (EditText) findViewById(R.id.emailid);
-        phoneNumber = (EditText) findViewById(R.id.phoneNumber);
         password = (EditText) findViewById(R.id.Password);
         login = (TextView) findViewById(R.id.login_text);
 
@@ -64,7 +64,6 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         String Email = email.getText().toString().trim();
         String Password = password.getText().toString().trim();
         String Name = name.getText().toString().trim();
-        String PhoneNumber = phoneNumber.getText().toString().trim();
 
         if (Email.isEmpty()){
             email.setError("Enter Email Id");
@@ -91,30 +90,22 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
             name.requestFocus();
             return;
         }
-        if(PhoneNumber.isEmpty()){
-            phoneNumber.setError("Enter Phone number");
-            phoneNumber.requestFocus();
-            return;
-        }
         progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(Email,Password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>(){
-
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            User user = new User(Name,Email,PhoneNumber);
+
+                            User user = new User(Name,Email,Password);
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-
                                     if (task.isSuccessful()){
                                         Toast.makeText(getApplicationContext(),"User has been successfully registered",Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
-
-
                                         //to user profile
                                     }
                                     else{

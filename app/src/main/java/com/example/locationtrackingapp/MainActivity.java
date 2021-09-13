@@ -1,10 +1,13 @@
 package com.example.locationtrackingapp;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -44,7 +47,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SignIn.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-
+    }
+    private void keepuserSignedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            Intent i = new Intent(MainActivity.this, MainActivity3.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            // User is signed out
+            Log.d(TAG, "onAuthStateChanged:signed_out");
+        }
     }
 
     @Override
@@ -56,6 +70,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.login:
                 UserLogin();
                 break;
+            case R.id.forgetpassword:
+                startActivity(new Intent(this,MainActivity4.class));
+                break;
+
         }
     }
 
@@ -88,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         progressBar.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(),"Login successfull",Toast.LENGTH_LONG).show();
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                        keepuserSignedIn();
                     }
                     else{
                         user.sendEmailVerification();

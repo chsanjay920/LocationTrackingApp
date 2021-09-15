@@ -50,7 +50,8 @@ public class updateLocation extends BroadcastReceiver {
 //        mp.start();
         GetLocation getLocation= new GetLocation(context);
         l = getLocation.getCurrentLocation();
-        Latitude = getLocation.updateWithNewLocation(l);
+        Latitude = getLocation.updateLatitude(l);
+        Longitude = getLocation.updateLongitude(l);
 
         currentTime = Calendar.getInstance().getTime();
         FirebaseDatabase database = FirebaseDatabase.getInstance();

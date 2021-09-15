@@ -50,5 +50,27 @@ public class GetLocation {
 
         return latLongString;
     }
+    public String updateLatitude(Location location){
+        String Latitude;
+        if(location != null){
+            double lat = location.getLatitude();
+            Latitude = ""+lat;
+        }
+        else{
+            Latitude = "NO Latitude";
+        }
+        return Latitude;
+    }
+    public String updateLongitude(Location location){
+        String Longitude;
+        if(location != null){
+            double longi = location.getLongitude();
+            Longitude = ""+longi;
+        }
+        else{
+            Longitude= "NO Latitude";
+        }
+        return Longitude;
+    }
 
 }

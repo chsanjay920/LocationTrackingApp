@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity3 extends AppCompatActivity implements View.OnClickListener
 {
@@ -42,12 +44,15 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private AlarmManager alarmManager;
     private PendingIntent pi;
+    private Object GetLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-
+        
+        GetLocation getLocation= new GetLocation(this);
+        
         signout = (Button) findViewById(R.id.Signout);
         signout.setOnClickListener(this);
         getUsers = (Button) findViewById(R.id.getusers);
@@ -59,6 +64,7 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
         Deactivate.setOnClickListener(this);
 //        keepuserSignedIn();
         initializeAlaramManager();
+
     }
 
 
@@ -93,10 +99,14 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
     }
 
     private void pushMyLocation() {
-        Toast.makeText(MainActivity3.this,"alaram activated",Toast.LENGTH_LONG).show();
+        Toast.makeText(MainActivity3.this,"alaram activated",Toast.LENGTH_SHORT).show();
         int time = 5;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE){
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+(time*1000),time*1000,pi);
+//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+(time*1000),time*1000,pi);
+      alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                          SystemClock.elapsedRealtime(),
+                          2*1000,
+                          pi);
         }
         else{
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME,System.currentTimeMillis()+(time*1000),time*1000,pi);

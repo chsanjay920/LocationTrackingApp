@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class MainActivity2 extends AppCompatActivity implements View.OnClickListener {
@@ -64,6 +65,7 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
         String Email = email.getText().toString().trim();
         String Password = password.getText().toString().trim();
         String Name = name.getText().toString().trim();
+        Date createdTime = null;
 
         if (Email.isEmpty()){
             email.setError("Enter Email Id");
@@ -96,8 +98,7 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-
-                            User user = new User(Name,Email,Password);
+                            User user = new User(Name,Email,Password,"","",createdTime);
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -109,14 +110,14 @@ public class MainActivity2 extends AppCompatActivity implements View.OnClickList
                                         //to user profile
                                     }
                                     else{
-                                        Toast.makeText(getApplicationContext(),"Failed to Register!",Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(),"Failed to Register!",Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     }
                                 }
                             });
                         }
                         else{
-                            Toast.makeText(getApplicationContext(),"Failed to Register!",Toast.LENGTH_LONG);
+                            Toast.makeText(getApplicationContext(),"Failed to Register!",Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }

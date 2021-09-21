@@ -11,11 +11,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class MainActivity3 extends AppCompatActivity implements View.OnClickListener
 {
@@ -124,6 +127,7 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
     }
     private void displayList() {
         ArrayList<String> arrayList = new ArrayList<>();
+        HashMap<String,User> hashmap = new HashMap<>();
         ArrayAdapter adapter = new ArrayAdapter<String>(this,R.layout.users,arrayList);
         UsersList.setAdapter(adapter);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -131,17 +135,28 @@ public class MainActivity3 extends AppCompatActivity implements View.OnClickList
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 arrayList.clear();
-                int count=1;
+
                 for(DataSnapshot snapshot1: snapshot.getChildren()){
                     User userprofile = snapshot1.getValue(User.class);
-                    arrayList.add(count+" : "+ userprofile.fullName);
-                    count++;
+                    arrayList.add( userprofile.fullName);
+                    hashmap.put(userprofile.fullName,userprofile);
+
                 }
                 adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+            }
+        });
+        UsersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+                User user_ = hashmap.get(arrayList.get(position));
+                String la = user_.Latitude;
+                String lo = user_.Longitude;
+                Intent viewIntent =
+                        new Intent("android.intent.action.VIEW",
+                                Uri.parse("https://www.google.com/maps/place/"+la+","+lo));
+                startActivity(viewIntent);
             }
         });
     }
